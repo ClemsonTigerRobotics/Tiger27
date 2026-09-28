@@ -2,31 +2,37 @@
 
 // Inputs an RGB value and returns if the color of that RBG value is red, blue, yellow, or grey in a character
 // Parameters: R (The red value of the color) : B (The blue value of the color) : G (The green value of the color)
-// Returns: r (Color is red) : b (Color is blue) : y (Color is yellow) : g (Color is grey) : ? (Color does not match criteria)
+// Returns: r (Color is red) : b (Color is blue) : y (Color is yellow) : g (Color is grey) : c (Color is clear) :  ? (Color does not match criteria)
 
-char detectColor (int R, int G, int B) {
+char detectColor (int colorDegree, double distance) {
     char color; // Contains the determined color
 
-    int redMin = 150; // Defines the minimum and maximum red value to declare the detected color as red.
-    int redMax = 255; 
+    int redMin = 340; // Defines the minimum and maximum wheel angle to declare the detected color as red.
+    int redMax = 20; 
 
-    int blueMin = 150; // Defines the minimum and maximum blue value to declare the detected color as blue.
-    int blueMax = 255;
+    int blueMin = 200; // Defines the minimum and maximum wheel angle to declare the detected color as blue.
+    int blueMax = 240;
 
-    int yellowMin = 150; // Defines the minimum blue and green value to declare the detected color as yellow.
-    int yellowRatio = 4; // Defines the ratio of red and green to blue with the following equation: R + G > (Ratio) * B
+    int yellowMin = 40;  // Defines the minimum and maximum wheel angle to declare the detected color as yellow.
+    int yellowMax = 80;
 
-    double greyMin = 0.9; // Defines the minimum ratio of Blue to Red (B/R) that is classified as grey
-    double greyMax = 1.1; // Defines the maximum ratio of Green to Red (G/R) that is classified as grey
+    int minDistance = 1; // Defines the minimum and maximum distance to detect the object.
+    int maxDistance = 10;
+
+    int clearMinColor = 280; // Define the minimum and maximum distance to declare the dected color as clear.
+    int clearMaxColor = 320;
+
 
     // Determines the color based on RGB parameters
-    if (R > redMin && R <= redMax && (B < 200 && G < 200)) {
+    if (colorDegree > redMin - 360 && colorDegree < redMax) { // Red subtracted by 360 to create a negative angle representing the same color so the range works
         color = 'r';
-    } else if (B > blueMin && B <= blueMax && (R < 200 && G < 2)) {
+    } else if (colorDegree > blueMin && colorDegree < blueMax) {
         color = 'b';
-    } else if (R > yellowMin && G > yellowMin && R + G > yellowRatio * B) {
+    } else if (colorDegree > yellowMin && colorDegree < yellowMax) {
         color = 'y';
-    } else if (.9 > (B/R) && (G/R) < 1.1) {
+    } else if (distance > minDistance && distance < maxDistance && colorDegree > clearMinColor && colorDegree < clearMaxColor) {
+        color = 'c';
+    } else if (distance > minDistance && distance < maxDistance) {
         color = 'g';
     } else {
         color = '?';
@@ -35,5 +41,5 @@ char detectColor (int R, int G, int B) {
 }
 
 int main() {
-    std::cout << detectColor(220,215,30);
+    std::cout << detectColor(90, 0);
 }
